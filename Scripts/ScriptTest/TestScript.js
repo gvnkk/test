@@ -1,51 +1,3 @@
-/*------------------------------------------------------------------------------------------------------/
-| SVN $Id: CapSetDetailCapAddedToAccount.js 4781 2009-10-01 05:55:23Z roland.vonschoech $
-| Program : CapSetDetailCapAddedToAccountV1.6.js
-| Event   : The Sets Portlet's Execute Script button, which triggers the CapSetDetailUserExecuteAfter
-|			event.
-|
-| Usage   : Master Script by Bill Wayson, modeled after an Accela-provided Master Script
-|
-| Client  : SBCO
-| Action# : N/A
-|
-| Notes   : This is a generic "Master Script" for use in Sets using the "Execute Script" button in the
-|			Sets portlet.  For each script you wish to list under that button, make a copy of this
-|			script, rename it, change the value of 'controlString' below to the Standard Choice
-|			entry point you use, and save it as an AA script.  Depending on the needs of the Standard
-|			Choice script, you may need to add additional functions to your stored Master Script.
-|
-|
-/------------------------------------------------------------------------------------------------------*/
-/*------------------------------------------------------------------------------------------------------/
-| START User Configurable Parameters
-|
-|     Only variables in the following section may be changed.  If any other section is modified, this
-|     will no longer be considered a "Master" script and will not be supported in future releases.  If
-|     changes are made, please add notes above.
-/------------------------------------------------------------------------------------------------------*/
-/*------------------------------------------------------------------------------------------------------/
-| SVN $Id: CapSetDetailPreDepositRegister07 4781 2009-10-01 05:55:23Z roland.vonschoech $
-| Program : CapSetDetailPreDepositRegisterV1.6.js
-| Event   : The Sets Portlet's Execute Script button, which triggers the CapSetDetailUserExecuteAfter
-|			event.
-|
-| Usage   : Master Script by Bill Wayson.  Used for deposit processing for a specific cash register.
-|			Change the controlString variable to the Standard Choice entry point for the register and
-|			action, which sets up register- and action-specific variables, and then branches to
-|			the general Standard Choice for deposit actions.  This script incorporates the generic
-|			CapSetDetailDepositProcedures master script, where all of the support for the Standard
-|			Choice scripting should go.
-|
-|			Because of the 30 character length limit of the Script Code field, it should be named
-|			similarly to CapSetDetailPreDeposit## or CapSetDetailPostDeposit##
-|
-| Client  : SBCO
-| Action# : N/A
-|
-| Notes   :	06-05-2013	Bill Wayson, ititial version.
-|
-/------------------------------------------------------------------------------------------------------*/
 emailText = "";
 message = "";
 br = "<br>";
@@ -56,7 +8,7 @@ eval(getScriptTextLocal("INCLUDES_ACCELA_FUNCTIONS", null, true));
 eval(getScriptTextLocal("INCLUDES_ACCELA_GLOBALS", null, true));
 eval(getScriptTextLocal("INCLUDES_CUSTOM", null, true));
 
-/* Begin Code needed to call master script functions ---------------------------------------------------*/
+
 function getScriptTextLocal(vScriptName, servProvCode, useProductScripts) {
 	if (!servProvCode)
 		servProvCode = aa.getServiceProviderCode();
@@ -120,9 +72,6 @@ include('CREATE_LABOR_CHARGES'); /* replaced branch(CSD:CreateLaborCharges) */
 
 
 
-/*------------------------------------------------------------------------------------------------------/
-| <===========END=Main=Loop================>
-/-----------------------------------------------------------------------------------------------------*/
 
 if (debug.indexOf("**ERROR") > 0)
 {
@@ -138,9 +87,6 @@ else
 		aa.env.setValue("ScriptReturnMessage", debug);
 }
 
-/*------------------------------------------------------------------------------------------------------/
-| <===========External Functions (used by Action entries)
-/------------------------------------------------------------------------------------------------------*/
 
 function appMatch(ats) // optional capId or CapID string
 {
@@ -474,10 +420,7 @@ function token(tstr)
 	return String(tstr);
 }
 
-/* =================================================================================================
- *	This function is cloned from and works similarly to the addFeeWithExtraData() built-in function.
- *	It differs by accepting a fee schedule version parameter to give the caller control over that.
- * ---------------------------------------------------------------------------------------------- */
+
 function sbcoAddFeeWithExtraData(fcode, fsched, fsversion, fperiod, fqty, finvoice, feeCap, feeComment, UDF1, UDF2)
 {
 	var feeCapMessage = "";
@@ -527,11 +470,7 @@ function sbcoAddFeeWithExtraData(fcode, fsched, fsversion, fperiod, fqty, finvoi
 	return feeSeq;
 }
 
-/* --------------------------------------------------------------------
-/	For a labor entry, should return 1 if the entry yas been charged in
-/	any way, 0 if it has not.  Parameters are string, string, string,
-/	int, and string.  servProvCode is an environmental variable.
-/------------------------------------------------------------------- */
+
 function sbcoCheckIfLaborActivityHasBeenCharged(pId1, pId2, pId3, pSeqNbr, pSource)
 {
 	var cSql = "select\
@@ -590,11 +529,6 @@ function sbcoConvertDate(pMilliseconds)
 	return new java.util.Date(pMilliseconds);
 }
 
-/* --------------------------------------------------------------------
-/	For a CAP, return the number of inspection labor activities that
-/	have not been charged through any system.  servProvCode is an
-/	environmental variable.
-/------------------------------------------------------------------- */
 function sbcoCountOfInspectionLaborActivityNotCharged(pId1, pId2, pId3)
 {
 	var cSql = "with vsbcACTIVITY_HISTORY as ( \
@@ -667,11 +601,7 @@ function sbcoCountOfInspectionLaborActivityNotCharged(pId1, pId2, pId3)
 	return vReturnValue;
 }
 
-/* --------------------------------------------------------------------
-/	For a CAP, return the number of workflow labor activities that
-/	have not been charged through any system.  servProvCode is an
-/	environmental variable.
-/------------------------------------------------------------------- */
+
 function sbcoCountOfWorkflowLaborActivityNotCharged(pId1, pId2, pId3)
 {
 	var cSql = "with vsbcACTIVITY_HISTORY as ( \
@@ -730,11 +660,7 @@ function sbcoCountOfWorkflowLaborActivityNotCharged(pId1, pId2, pId3)
 	return vReturnValue;
 }
 
-/* --------------------------------------------------------------------
-/	Retrieve the value if an inspection record's G6_ACT_JVAL field,
-/	which is a "User definable field", of type varchar(20).
-/	servProvCode is an environmental variable.
-/------------------------------------------------------------------- */
+
 function sbcoGetActivityJval(pId1, pId2, pId3, pSeqNbr)
 {
 	var cSql = "select\
@@ -783,11 +709,7 @@ function sbcoGetCapIDModel(pId1, pId2, pId3)
 	}
 }
 
-/* ====================================================================
- *	sbcoIsNumber():  Checks a value for being a number.  Returns true
- *	if it is, false otherwise.  Shamelessly lifted from a post in
- *	http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric
- * ----------------------------------------------------------------- */
+
 function sbcoIsNumber(n)
 {
 	return !isNaN(parseFloat(n)) && isFinite(n);
