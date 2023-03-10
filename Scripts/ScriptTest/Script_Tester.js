@@ -1,7 +1,7 @@
 /*
 
 	Script test template
-	changed line test12345689199
+	changed line test12345689199fff
 
 */
 var myCapId = "22-CAP-00050";
