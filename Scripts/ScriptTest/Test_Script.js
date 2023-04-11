@@ -54,7 +54,7 @@ for (var i = 0; i < SetMemberArray.length; i++)
 }
 
 /*
-Script Name: .js / \ ? : " < > |
+Script Name: .js 
 Converted from Std Choice: CapSetDetailCapAddedToAccount
 */
 
