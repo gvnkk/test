@@ -1,1 +1,1 @@
-aa.print("test تقتيش");
+aa.print("test");
